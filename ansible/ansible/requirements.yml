@@ -1,6 +1,0 @@
----
-roles:
-  - src: geerlingguy.redis   # Redis installation role from Galaxy
-collections:
-  - name: amazon.aws
-  - name: community.general
