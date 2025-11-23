@@ -12,7 +12,7 @@ pipeline {
         stage('Checkout Repo') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/Abhinavt28/redis-final-onclick.git'
+                    url: 'https://github.com/Abhinavt28/redis-final-oneclick.git'
             }
         }
 
