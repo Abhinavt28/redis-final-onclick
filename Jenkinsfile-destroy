@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        ansiColor('xterm')
+    }
+
+    environment {
+        // Terraform / AWS region (agar change karna ho toh yahan kar lena)
+        AWS_REGION = "eu-west-2"
+    }
+
+    stages {
+
+        stage('Checkout Repo') {
+            steps {
+                echo "📥 Checking out redis-final-oneclick repo"
+                deleteDir()
+                git branch: 'main',
+                    url: 'https://github.com/Abhinavt28/redis-final-oneclick.git'
+            }
+        }
+
+        stage('Terraform Init') {
+            steps {
+                echo "🚀 Running terraform init"
+                dir('terraform') {
+                    sh '''
+                        terraform init \
+                          -input=false
+                    '''
+                }
+            }
+        }
+
+        stage('Terraform Destroy') {
+            steps {
+                echo "💣 Destroying Redis HA infrastructure with Terraform"
+                dir('terraform') {
+                    sh '''
+                        terraform destroy \
+                          -auto-approve \
+                          -input=false
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "🧹 Cleaning workspace"
+            cleanWs()
+        }
+    }
+}
