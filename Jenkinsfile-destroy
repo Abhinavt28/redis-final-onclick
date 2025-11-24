@@ -3,11 +3,9 @@ pipeline {
 
     options {
         timestamps()
-        ansiColor('xterm')
     }
 
     environment {
-        // Terraform / AWS region (agar change karna ho toh yahan kar lena)
         AWS_REGION = "eu-west-2"
     }
 
@@ -24,25 +22,24 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                echo "🚀 Running terraform init"
-                dir('terraform') {
-                    sh '''
-                        terraform init \
-                          -input=false
-                    '''
+                wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
+                    dir('terraform') {
+                        sh '''
+                            terraform init -input=false
+                        '''
+                    }
                 }
             }
         }
 
         stage('Terraform Destroy') {
             steps {
-                echo "💣 Destroying Redis HA infrastructure with Terraform"
-                dir('terraform') {
-                    sh '''
-                        terraform destroy \
-                          -auto-approve \
-                          -input=false
-                    '''
+                wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
+                    dir('terraform') {
+                        sh '''
+                            terraform destroy -auto-approve -input=false
+                        '''
+                    }
                 }
             }
         }
