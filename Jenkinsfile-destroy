@@ -22,24 +22,20 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                    dir('terraform') {
-                        sh '''
-                            terraform init -input=false
-                        '''
-                    }
+                dir('terraform') {
+                    sh '''
+                        terraform init -input=false
+                    '''
                 }
             }
         }
 
         stage('Terraform Destroy') {
             steps {
-                wrap([$class: 'AnsiColorBuildWrapper', 'colorMapName': 'xterm']) {
-                    dir('terraform') {
-                        sh '''
-                            terraform destroy -auto-approve -input=false
-                        '''
-                    }
+                dir('terraform') {
+                    sh '''
+                        terraform destroy -auto-approve -input=false
+                    '''
                 }
             }
         }
